@@ -126,10 +126,15 @@ def extract_business_card_info(image, model_name="Nova Lite", max_retries=3):
                     }
                 },
                 {
-                    "text": """This is an image of a business card. 
-                    Extract the following information:
-                    1. Email address
+                    "text": """Task: Extract email address from image.
+                    
+                    Input: Business card image that may be rotated.
 
+                    Instructions:
+                    1. FIRST - Check image orientation: Detect if the business card is rotated (90°, 180°, or 270°) and mentally correct the orientation before extracting.
+                    2. SECOND - Scan the entire card thoroughly for any email addresses. Look for text containing "@" symbol.
+
+                    Response Format:
                     Respond in valid JSON format with fields "email". 
                     If any information is not found, use an empty string for that field.
                     Example: {"email": "john@example.com"}"""
@@ -140,7 +145,7 @@ def extract_business_card_info(image, model_name="Nova Lite", max_retries=3):
         # Inference config
         inference_config = {
             "maxTokens": 1000,
-            "temperature": 0.1
+            "temperature": 0.3
         }
         
         # API call with retries
