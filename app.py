@@ -93,7 +93,7 @@ def extract_business_card_info(image, model_name="Nova Lite", max_retries=3):
         logger.info(f"Using model: {model_name}")
         
         # Resize image if needed
-        max_size = 1600  # Reasonable size for API calls
+        max_size = 8000  # Reasonable size for API calls
         if max(image.size) > max_size:
             ratio = max_size / max(image.size)
             image = image.resize((int(image.width * ratio), int(image.height * ratio)))
@@ -131,13 +131,13 @@ def extract_business_card_info(image, model_name="Nova Lite", max_retries=3):
                     Input: Business card image that may be rotated.
 
                     Instructions:
-                    1. FIRST - Check image orientation: Detect if the business card is rotated (90°, 180°, or 270°) and mentally correct the orientation before extracting.
-                    2. SECOND - Scan the entire card thoroughly for any email addresses. Look for text containing "@" symbol.
-
+                    1. FIRST - Only extract clearly identifiable email addresses from images by looking for text containing the "@" symbol.
+                    2. SECOND - Please output the confidence score (0-1) for the results.
+                   
                     Response Format:
-                    Respond in valid JSON format with fields "email". 
+                    Respond in valid JSON format with fields "email" and "confidence"
                     If any information is not found, use an empty string for that field.
-                    Example: {"email": "john@example.com"}"""
+                    Example: {"email": "john@example.com", "confidence": 0.8 }"""
                 }
             ]
         }
@@ -145,7 +145,7 @@ def extract_business_card_info(image, model_name="Nova Lite", max_retries=3):
         # Inference config
         inference_config = {
             "maxTokens": 1000,
-            "temperature": 0.3
+            "temperature": 0
         }
         
         # API call with retries
